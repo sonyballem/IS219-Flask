@@ -49,7 +49,7 @@ def get_post(id, check_author=True):
     )
 
     if vendor is None:
-        abort(404, f"Post id {id} doesn't exist.")
+        abort(404, f"Vendor id {id} doesn't exist.")
 
     if check_author and vendor["author_id"] != g.user["id"]:
         abort(403)
