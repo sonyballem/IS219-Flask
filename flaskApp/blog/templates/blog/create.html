@@ -1,15 +1,59 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Add New Vendor{% endblock %}</h1>
+  <<h1>{% block title %}Add New Vendor{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <form method="post">
-    <label for="title">Title</label>
-    <input name="title" id="title" value="{{ request.form['title'] }}" required>
-    <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
-    <input type="submit" value="Save">
-  </form>
+
+    <form method="post" id="form_id">
+        <label for="title">Title</label>
+        <input name="title" id="title" value="{{ request.form['title'] }}" required>
+        <label for="body">Body</label>
+        <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+        <input type="submit" value="Save">
+    </form>
+
+    {% block javascript %}
+        <script>
+            window.addEventListener("load", function () {
+                function sendData() {
+                    const XHR = new XMLHttpRequest();
+
+                    // Bind the FormData object and the form element
+                    const FD = new FormData(form);
+
+                    // Define what happens on successful data submission
+                    XHR.addEventListener("load", function (event) {
+                        //alert(event.target.responseText);
+                        //console.log(event.target.responseText)
+                        //window.location.replace("/");
+                        console.log(event.target.responseText );
+
+                    });
+
+                    // Define what happens in case of error
+                    XHR.addEventListener("error", function (event) {
+                        alert('Oops! Something went wrong.');
+                    });
+
+                    // Set up our request
+                    XHR.open("POST", "/create");
+
+                    // The data sent is what the user provided in the form
+                    XHR.send(FD);
+                }
+
+                // Access the form element...
+                const form = document.getElementById("form_id");
+                // ...and take over its submit event.
+                form.addEventListener("submit", function (event) {
+                    event.preventDefault();
+
+                    sendData();
+                });
+            });
+        </script>
+    {% endblock %}
+
 {% endblock %}
